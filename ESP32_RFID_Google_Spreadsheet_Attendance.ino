@@ -30,8 +30,8 @@ String atc_Time_In = "";
 String atc_Time_Out = "";
 
 // Variables for the number of columns and rows on the LCD.
-int lcdColumns = 16;
-int lcdRows = 2;
+//int lcdColumns = 16;
+//int lcdRows = 2;
 
 // Variable to read data from RFID-RC522.
 int readsuccess;
