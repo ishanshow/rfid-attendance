@@ -16,7 +16,6 @@
 //----------------------------------------SSID and PASSWORD of your WiFi network.
 const char* ssid = "fsociety";  //--> Your wifi name
 const char* password = "ishallpass"; //--> Your wifi password
-//----------------------------------------
 
 // Google script Web_App_URL.
 String Web_App_URL = "https://script.google.com/macros/s/AKfycbzB4lpbz-uaOTb98SvMyPThYXNAPNXC8i9kkEKAru_Qh3NGkV7YNiGjodx2RVXDgLaH/exec";
@@ -29,10 +28,6 @@ String atc_Date = "";
 String atc_Time_In = "";
 String atc_Time_Out = "";
 
-// Variables for the number of columns and rows on the LCD.
-//int lcdColumns = 16;
-//int lcdRows = 2;
-
 // Variable to read data from RFID-RC522.
 int readsuccess;
 char str[32] = "";
@@ -40,15 +35,8 @@ String UID_Result = "--------";
 
 String modes = "atc";
 
-// Create LiquidCrystal_I2C object as "lcd" and set the LCD I2C address to 0x27 and set the LCD configuration to 20x4.
-// In general, the address of a 20x4 I2C LCD is "0x27".
-// However, if the address "0x27" doesn't work, you can find out the address with "i2c_scanner". Look here : https://playground.arduino.cc/Main/I2cScanner/
-//LiquidCrystal_I2C lcd(0x27, lcdColumns, lcdRows);  // (lcd_address, lcd_Columns, lcd_Rows)
-
-// Create MFRC522 object as "mfrc522" and set SS/SDA PIN and Reset PIN.
 MFRC522 mfrc522(SS_PIN, RST_PIN);  //--> Create MFRC522 instance.
 
-//________________________________________________________________________________http_Req()
 // Subroutine for sending HTTP requests to Google Sheets.
 void http_Req(String str_modes, String str_uid) {
   if (WiFi.status() == WL_CONNECTED) {
@@ -63,7 +51,6 @@ void http_Req(String str_modes, String str_uid) {
       http_req_url = Web_App_URL + "?sts=reg";
       http_req_url += "&uid=" + str_uid;
     }
-    //----------------------------------------
 
     //----------------------------------------Sending HTTP requests to Google Sheets.
     Serial.println();
@@ -94,26 +81,12 @@ void http_Req(String str_modes, String str_uid) {
     Serial.println("-------------");
     http.end();
     //----------------------------------------
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // Example :                                                                                              //
-    // Sending an http request to fill in "Time In" attendance.                                               //
-    // User data :                                                                                            //
-    // - Name : Adam                                                                                          //
-    // - UID  : A01                                                                                           //
-    // So the payload received if the http request is successful and the parameters are correct is as below : //
-    // OK,Adam,29/10/2023,08:30:00 ---> Status,Name,Date,Time_In                                              //
-    //                                                                                                        //
-    // So, if you want to retrieve "Status", then getValue(payload, ',', 0);                                  //
-    // String sts_Res = getValue(payload, ',', 0);                                                            //
-    // So the value of sts_Res is "OK".                                                                       //
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////
     
     String sts_Res = getValue(payload, ',', 0);
 
     //----------------------------------------Conditions that are executed are based on the payload response from Google Sheets (the payload response is set in Google Apps Script).
     if (sts_Res == "OK") {
-      //..................
+      
       if (str_modes == "atc") {
         atc_Info = getValue(payload, ',', 1);
         
@@ -131,23 +104,6 @@ void http_Req(String str_modes, String str_uid) {
           } else if (name_Lenght > lcdColumns) {
             atc_Name = atc_Name.substring(0, lcdColumns);
           }
-          //::::::::::::::::::
-
-        //  lcd.clear();
-        //  delay(500);
-        //  lcd.setCursor(0,0);
-        //  lcd.print(atc_Name);
-        //  lcd.setCursor(9,0);
-        //  lcd.print("Date: ");
-        //  lcd.print(atc_Date);
-        //  lcd.setCursor(0,1);
-        //  lcd.print("Time IN: ");
-         // lcd.print(atc_Time_In);
-        //  lcd.setCursor(9,1);
-        //  lcd.print("Time Out: ");
-        //  delay(5000);
-        //  lcd.clear();
-        //  delay(500);
         }
 
         if (atc_Info == "TO_Successful") {
@@ -165,50 +121,14 @@ void http_Req(String str_modes, String str_uid) {
           } else if (name_Lenght > lcdColumns) {
             atc_Name = atc_Name.substring(0, lcdColumns);
           }
-          //::::::::::::::::::
-
-         // lcd.clear();
-         // delay(500);
-         // lcd.setCursor(0,0);
-         // lcd.print(atc_Name);
-         // lcd.setCursor(9,0);
-          //lcd.print("Date: ");
-        //  lcd.print(atc_Date);
-         // lcd.setCursor(0,1);
-        //  lcd.print("Time IN :   ");
-         // lcd.print(atc_Time_In);
-         // lcd.setCursor(9,1);
-         // lcd.print("Time Out:   ");
-         // lcd.print(atc_Time_Out);
-          //delay(5000);
-         // lcd.clear();
-         // delay(500);
         }
 
         if (atc_Info == "atcInf01") {
-        //  lcd.clear();
-         // delay(500);
-        //  lcd.setCursor(1,0);
           Serial.print("Attendance recorded");
-         // lcd.print("Attendance recorded");
-         // delay(5000);
-        //  lcd.clear();
-         // delay(500);
         }
 
         if (atc_Info == "atcErr01") {
-        //  lcd.clear();
-        //  delay(500);
-        //  lcd.setCursor(0,0);
-         // lcd.print("Error !");
-         // lcd.setCursor(9,0);
-        //  lcd.print("Your card is");
-         // lcd.setCursor(0,1);
-       //   lcd.print("not registered");
         Serial.print("Card not registered");
-        //  delay(5000);
-       //   lcd.clear();
-        //  delay(500);
         }
 
         atc_Info = "";
@@ -224,36 +144,15 @@ void http_Req(String str_modes, String str_uid) {
         reg_Info = getValue(payload, ',', 1);
         
         if (reg_Info == "R_Successful") {
-        //  lcd.clear();
-          //delay(500);
-         // lcd.setCursor(0,0);
-         // lcd.print("Your card UID");
           Serial.print("Your card UID is uploaded");
-         // lcd.setCursor(0,1);
-         // lcd.print("is uploaded");
-         // delay(5000);
-         // lcd.clear();
-         // delay(500);
         }
 
         if (reg_Info == "regErr01") {
-         // lcd.clear();
-        //  delay(500);
-        //  lcd.setCursor(6,0);
-         // lcd.print("Error ! Card UID");
             Serial.print("Error ! Card UID is not registered");
-        //  lcd.setCursor(0,1);
-        //  lcd.print("not registered");
-        //  delay(5000);
-          //lcd.clear();
-         // delay(500);
         }
-
         reg_Info = "";
       }
-      //..................
     }
-    //----------------------------------------
   } else {
    // lcd.clear();
    // delay(500);
@@ -266,7 +165,6 @@ void http_Req(String str_modes, String str_uid) {
   //  delay(500);
   }
 }
-//________________________________________________________________________________
 
 //________________________________________________________________________________getValue()
 // String function to process the data (Split String).
@@ -285,7 +183,6 @@ String getValue(String data, char separator, int index) {
   }
   return found > index ? data.substring(strIndex[0], strIndex[1]) : "";
 }
-//________________________________________________________________________________ 
 
 //________________________________________________________________________________getUID()
 // Subroutine to obtain UID/ID when RFID card or RFID keychain is tapped to RFID-RC522 module.
@@ -305,7 +202,6 @@ int getUID() {
   
   return 1;
 }
-//________________________________________________________________________________
 
 //________________________________________________________________________________byteArray_to_string()
 void byteArray_to_string(byte array[], unsigned int len, char buffer[]) {
@@ -317,7 +213,6 @@ void byteArray_to_string(byte array[], unsigned int len, char buffer[]) {
   }
   buffer[len*2] = '\0';
 }
-//________________________________________________________________________________
 
 //________________________________________________________________________________VOID SETUP()
 void setup(){
@@ -328,11 +223,6 @@ void setup(){
   delay(1000);
 
   pinMode(BTN_PIN, INPUT_PULLUP);
-  
-  // Initialize LCD.
-  //lcd.init();
-  // turn on LCD backlight.
-  //lcd.backlight();
   
   //lcd.clear();
 
@@ -345,12 +235,7 @@ void setup(){
 
   delay(500);
 
-  //lcd.setCursor(3,0);
-  //lcd.print("ESP32 RFID");
-  //lcd.setCursor(0,1);
-  //lcd.print("Attendance");
   delay(3000);
-  //lcd.clear();
 
   //----------------------------------------Set Wifi to STA mode
   Serial.println();
@@ -358,7 +243,6 @@ void setup(){
   Serial.println("WIFI mode : STA");
   WiFi.mode(WIFI_STA);
   Serial.println("-------------");
-  //---------------------------------------- 
 
   //----------------------------------------Connect to Wi-Fi (STA).
   Serial.println();
@@ -377,12 +261,7 @@ void setup(){
   while (WiFi.status() != WL_CONNECTED) {
     Serial.print(".");
 
-    //lcd.setCursor(0,0);
-    //lcd.print("Connecting to SSID");
     delay(250);
-
-   // lcd.clear();
-    //delay(250);
     
     if (connecting_process_timed_out > 0) connecting_process_timed_out--;
     if (connecting_process_timed_out == 0) {
@@ -395,19 +274,8 @@ void setup(){
   Serial.println("WiFi connected");
   Serial.println("------------");
   Serial.println("Mode: "+ modes);
-  //lcd.clear();
-  //lcd.setCursor(0,0);
-  //lcd.print("WiFi connected");
-  //delay(2000);
-  //::::::::::::::::::
-  //----------------------------------------
-
-  //lcd.clear();
-  //delay(500);
 }
-//________________________________________________________________________________
 
-//________________________________________________________________________________VOID LOOP()
 void loop(){
   // put your main code here, to run repeatedly:
 
@@ -429,55 +297,24 @@ void loop(){
     delay(500);
     Serial.println("Mode changed:"+ modes);
   }
-  //----------------------------------------
 
   // Detect if reading the UID from the card or keychain was successful.
   readsuccess = getUID();
 
   //----------------------------------------Conditions that are executed if modes == "atc".
   if (modes == "atc") {
-   // lcd.setCursor(0,0);
-   // lcd.print("ATTENDANCE");
-    //lcd.setCursor(0,1);
-   // lcd.print("Please tap your card");
-
     if (readsuccess){
-    //  lcd.clear();
-     // lcd.setCursor(4,0);
-     // lcd.print("Getting  UID");
-   //   lcd.setCursor(4,1);
-   //   lcd.print("Successfully");
-     // lcd.setCursor(0,2);
-    //  lcd.print("");
-    //  lcd.setCursor(3,3);
-    //  lcd.print("Please wait...");
       delay(1000);
-
       http_Req(modes, UID_Result);
     }
   }
-  //----------------------------------------
 
   //----------------------------------------Conditions that are executed if modes == "reg".
   if (modes == "reg") {
-  //  lcd.setCursor(0,0);
-  //  lcd.print("REGISTRATION");
-   // lcd.setCursor(0,1);
-   // lcd.print("Please tap your card");
-
     if (readsuccess){
-     // lcd.clear();
       delay(500);
-    //  lcd.setCursor(0,0);
-      //lcd.print("Getting  UID");
-    //  lcd.setCursor(0,1);
-    //  lcd.print("UID : ");
-    //  lcd.print(UID_Result);
-
       http_Req(modes, UID_Result);
     }
   }
-  //----------------------------------------
-
   delay(10);
 }
