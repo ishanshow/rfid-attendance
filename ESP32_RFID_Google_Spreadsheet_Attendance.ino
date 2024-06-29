@@ -14,8 +14,8 @@
 #define BTN_PIN 15
 
 //----------------------------------------SSID and PASSWORD of your WiFi network.
-const char* ssid = "fsociety";  //--> Your wifi name
-const char* password = "ishallpass"; //--> Your wifi password
+const char* ssid = "SSID";  //--> Your wifi name
+const char* password = "PASSWORD"; //--> Your wifi password
 
 // Google script Web_App_URL.
 String Web_App_URL = "https://script.google.com/macros/s/AKfycbzB4lpbz-uaOTb98SvMyPThYXNAPNXC8i9kkEKAru_Qh3NGkV7YNiGjodx2RVXDgLaH/exec";
